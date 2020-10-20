@@ -18,6 +18,8 @@ public class ThirdPersonMovement : MonoBehaviour
     //to smooth player turn speed
     public float turnSmoothTime = 0.1f;
 
+    public Animator animator;
+
     float turnSmoothVelocity;
 
     Vector3 velocity;
@@ -43,9 +45,20 @@ public class ThirdPersonMovement : MonoBehaviour
         //.normalized prevents us from going faster if two keys are pressed at once
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-                  
+        if (isGrounded && velocity.y < 0f && direction.magnitude < 0.1f)
+        {
+            animator.SetInteger("isRunning", 0);
+            animator.SetInteger("isIdle", 1);
+        }
+
         if (direction.magnitude >= 0.1f)
         {
+
+            if (animator.GetInteger("isRunning") == 0)
+            {   
+                animator.SetInteger("isIdle", 0);
+                animator.SetInteger("isRunning", 1);
+            }
 
             //set run animation boolean to true
             //finds the angle we need to turn to face our new direction, add 180 to account for players initial rotation

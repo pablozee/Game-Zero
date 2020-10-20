@@ -33,7 +33,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0) 
         {
-            velocity.y = -2f;
+            velocity.y = -4f;
         }
 
         // x axis

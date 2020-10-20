@@ -25,6 +25,8 @@ public class ThirdPersonMovement : MonoBehaviour
     Vector3 velocity;
 
     bool isGrounded;
+    bool isAiming = false;
+    bool isRunning = false;
 
     // Update is called once per frame
     void Update()
@@ -45,14 +47,39 @@ public class ThirdPersonMovement : MonoBehaviour
         //.normalized prevents us from going faster if two keys are pressed at once
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isRunning == false)
+        {
+            isAiming = !isAiming;
+            if (animator.GetInteger("isIdle") == 1)
+            {
+                animator.SetInteger("isIdle", 0);
+            }
+             if (animator.GetInteger("isRunning") == 1)
+            {
+                animator.SetInteger("isRunning", 0);
+            }
+            animator.SetBool("isAiming", !animator.GetBool("isAiming"));
+        }
+
+         if (Input.GetMouseButtonDown(0) && isAiming) 
+            {
+                animator.SetTrigger("shoot");
+            }
+
         if (isGrounded && velocity.y < 0f && direction.magnitude < 0.1f)
         {
+            isRunning = false;
             animator.SetInteger("isRunning", 0);
-            animator.SetInteger("isIdle", 1);
+
+            if (isAiming == false)
+            {
+                animator.SetInteger("isIdle", 1);
+            }
         }
 
         if (direction.magnitude >= 0.1f)
         {
+            isRunning = true;
 
             if (animator.GetInteger("isRunning") == 0)
             {   

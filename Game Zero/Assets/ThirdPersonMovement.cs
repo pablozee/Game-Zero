@@ -8,8 +8,13 @@ public class ThirdPersonMovement : MonoBehaviour
     public Transform cam;
 
     public Transform groundCheck;
-    public float groundDistance = 0.4f;
+    public float groundDistance = 0.1f;
     public LayerMask groundMask;
+
+    public Transform landingCheck;
+
+    public Transform aimLookAt;
+
 
     public float speed = 6f;
     public float gravity = -9.81f;
@@ -28,6 +33,8 @@ public class ThirdPersonMovement : MonoBehaviour
     bool isAiming = false;
     bool isRunning = false;
 
+    bool isLanding = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -36,6 +43,13 @@ public class ThirdPersonMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0) 
         {
             velocity.y = -4f;
+        }
+
+        isLanding = Physics.CheckSphere(landingCheck.position, groundDistance, groundMask);
+
+        if (isLanding && !isGrounded && velocity.y < 0)
+        {
+            animator.SetTrigger("land");
         }
 
         // x axis
@@ -62,9 +76,9 @@ public class ThirdPersonMovement : MonoBehaviour
         }
 
          if (Input.GetMouseButtonDown(0) && isAiming) 
-            {
-                animator.SetTrigger("shoot");
-            }
+        {
+            animator.SetTrigger("shoot");
+        }
 
         if (isGrounded && velocity.y < 0f && direction.magnitude < 0.1f)
         {
@@ -75,6 +89,15 @@ public class ThirdPersonMovement : MonoBehaviour
             {
                 animator.SetInteger("isIdle", 1);
             }
+        }
+
+        //Rotate when aiming
+        if (isAiming)
+        {
+            float targetAngle = cam.transform.eulerAngles.y + 180;          
+            float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+
         }
 
         if (direction.magnitude >= 0.1f)
@@ -107,6 +130,17 @@ public class ThirdPersonMovement : MonoBehaviour
          if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+            if (animator.GetInteger("isIdle") == 1)
+            {
+                animator.SetInteger("isIdle", 0);
+            }
+             if (animator.GetInteger("isRunning") == 1)
+            {
+                animator.SetInteger("isRunning", 0);
+            }
+            animator.SetTrigger("jump");
+
         }
 
         velocity.y += gravity * Time.deltaTime;
@@ -114,4 +148,5 @@ public class ThirdPersonMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
     }
+
 }

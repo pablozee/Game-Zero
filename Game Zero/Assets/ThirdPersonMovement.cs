@@ -25,6 +25,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public Animator animator;
 
+    public GameObject shootOrigin;
+
     float turnSmoothVelocity;
 
     Vector3 velocity;
@@ -147,6 +149,34 @@ public class ThirdPersonMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
+    }
+
+    private void FixedUpdate() 
+    {
+        if (isAiming)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Shoot();     
+            }
+        }
+    }
+
+    void Shoot()
+    {
+        RaycastHit hit;
+
+            if (Physics.Raycast(shootOrigin.transform.position, new Vector3(0, 0, -1), out hit, Mathf.Infinity))
+            {
+                if (hit.collider.tag == "Enemy")
+                {
+                    Debug.Log("Hit Enemy");
+                    hit.collider.GetComponent<EnemyStats>().Die();
+                }
+            } else 
+            {
+                Debug.Log("Ray didn't hit");
+            }
     }
 
 }

@@ -166,8 +166,11 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         RaycastHit hit;
 
-            if (Physics.Raycast(shootOrigin.transform.position, new Vector3(0, 0, -1), out hit, Mathf.Infinity))
+        Vector3 newForward = transform.forward * -1;
+
+            if (Physics.Raycast(shootOrigin.transform.position, newForward, out hit, Mathf.Infinity))
             {
+                Debug.DrawRay(shootOrigin.transform.position, newForward, Color.red, 4f);
                 if (hit.collider.tag == "Enemy")
                 {
                     Debug.Log("Hit Enemy");
@@ -175,6 +178,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 }
             } else 
             {
+                Debug.DrawRay(shootOrigin.transform.position, newForward, Color.red, 4f);
                 Debug.Log("Ray didn't hit");
             }
     }

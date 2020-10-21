@@ -7,8 +7,8 @@ public class PlayerStats : MonoBehaviour
     public float maxHealth = 10;
     public float playerScore = 0;
 
-    float currentHealth;
-    float currentScore;
+    public float currentHealth;
+    public float currentScore;
     // Start is called before the first frame update
     void Start()
     {

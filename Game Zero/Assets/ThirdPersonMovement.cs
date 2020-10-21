@@ -174,7 +174,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 if (hit.collider.tag == "Enemy")
                 {
                     Debug.Log("Hit Enemy");
-                    hit.collider.GetComponent<EnemyStats>().Die();
+                    hit.collider.GetComponent<EnemyStats>().TakeDamage(10);
                 }
             } else 
             {

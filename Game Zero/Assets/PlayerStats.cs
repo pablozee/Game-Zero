@@ -2,38 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStats : MonoBehaviour
+public class PlayerStats : MonoBehaviour
 {
-    public PlayerStats playerStats;
     public float maxHealth = 10;
+    public float playerScore = 0;
 
     float currentHealth;
-
+    float currentScore;
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+           TakeDamage(1); 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            AddScore(1);
+        }
     }
 
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
 
-        if (currentHealth >= 0) 
-        {
-            Die();
-        }
     }
 
-    void Die()
+    public void AddScore(float amount)
     {
-        Destroy(gameObject);
-        playerStats.AddScore(10);
+        
+        currentScore += amount;
     }
 }

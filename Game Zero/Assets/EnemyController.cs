@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour
 
     public GameObject EnemyGFX;
 
+    public GameObject targetObject;
+
     public float AttackDistance = 10f;
 
     public float FollowDistance = 20f;
@@ -57,6 +59,12 @@ public class EnemyController : MonoBehaviour
         if (!follow || shoot)
         {
             navMeshAgent.SetDestination(transform.position);
+        }
+
+        if (!follow && !shoot)
+        {
+            navMeshAgent.SetDestination(targetObject.transform.position);
+            animator.SetBool("run", true);
         }
 
         animator.SetBool("idle", idle);      

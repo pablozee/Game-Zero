@@ -63,4 +63,16 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("shoot", shoot);
         animator.SetBool("run", follow);
     }
+
+    public void ShootEvent()
+    {
+        float random = Random.Range(0.0f, 1.0f);
+
+        bool isHit = random > (1.0f - HitAccuracy);
+
+        if (isHit)
+        {
+            Player.GetComponent<PlayerStats>().TakeDamage(2);
+        }
+    }
 }

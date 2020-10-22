@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreUI : MonoBehaviour
+public class HealthUI : MonoBehaviour
 {
     public PlayerStats playerStats;
-    Text score;
+    Text playerHealth;
+    
     // Start is called before the first frame update
     void Start()
     {
-        score = GetComponent<Text>();
+        playerHealth = GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        score.text = "Score: " + playerStats.currentScore.ToString();
+        playerHealth.text = "Health: " + playerStats.currentHealth.ToString();
     }
 }

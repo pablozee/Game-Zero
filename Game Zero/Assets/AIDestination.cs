@@ -8,14 +8,15 @@ public class AIDestination : MonoBehaviour
     public GameObject Enemy;
 
     void Update() {
-        if (Vector3.Distance(this.gameObject.transform.position, Enemy.transform.position) < 2f)
+        if (Enemy)
         {
-            float xPos = Random.Range(3, 10);
-            float zPos = Random.Range(87, 97);
-            gameObject.transform.position = new Vector3(xPos, 1, zPos);
-            Debug.Log("Collision");
-
-
+            if (Vector3.Distance(this.gameObject.transform.position, Enemy.transform.position) < 2f)
+            {
+                float xPos = Random.Range(3, 10);
+                float zPos = Random.Range(87, 97);
+                gameObject.transform.position = new Vector3(xPos, 1, zPos);
+                Debug.Log("Collision");
+            }
         }
     }
     void OnTriggerEnter(Collider other) {

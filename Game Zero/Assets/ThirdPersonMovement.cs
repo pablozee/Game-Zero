@@ -28,13 +28,21 @@ public class ThirdPersonMovement : MonoBehaviour
 
     float turnSmoothVelocity;
 
+    float turnShootSmoothVelocity;
+
+    float faceAngle;
+
     Vector3 velocity;
+
+    Vector3 faceDirection;
 
     bool isGrounded;
     bool isAiming = false;
     bool isRunning = false;
 
     bool isLanding = false;
+
+    // bool isShooting = false;
 
     // Update is called once per frame
     void Update()
@@ -92,14 +100,21 @@ public class ThirdPersonMovement : MonoBehaviour
             }
         }
 
-        //Rotate when aiming
         if (isAiming && direction.magnitude < 0.1f)
         {
-            float targetAngle = cam.eulerAngles.y;          
+            float targetAngle = faceAngle;
             float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+        }  
+        // if (isShooting)
+        // {
+        //     Debug.Log("In shooting");
+        //     Debug.Log(faceDirection);
+        //     float shootSmoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, faceDirection.y, ref turnShootSmoothVelocity, turnSmoothTime);
+        //     transform.rotation = Quaternion.Euler(0f, shootSmoothedAngle, 0f);
 
-        }
+        // }
+        // isShooting = false;
 
         if (direction.magnitude >= 0.1f)
         {
@@ -166,13 +181,16 @@ public class ThirdPersonMovement : MonoBehaviour
         RaycastHit hit;
 
         RaycastHit cameraHit;
-
-        Vector3 newForward = transform.forward * -1;
         
         Ray cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // isShooting = true;
+
 
         if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
         {
+            
+            faceAngle = Vector3.Angle(transform.forward, cameraAim.direction);
+            // faceAngle = Vector3.Angle(-transform.forward, (cameraHit.transform.position - shootOrigin.transform.position).normalized);
             
             if (Physics.Raycast(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, out hit, Mathf.Infinity))
             {

@@ -184,7 +184,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotationDirection, 0.75f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationDirection, 1f);
         
         if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
         {

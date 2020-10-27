@@ -22,6 +22,8 @@ public class ThirdPersonMovement : MonoBehaviour
     //to smooth player turn speed
     public float turnSmoothTime = 0.1f;
 
+    public float shootRotateSpeed = 6.3f;
+
     public Animator animator;
 
     public GameObject shootOrigin;
@@ -43,8 +45,6 @@ public class ThirdPersonMovement : MonoBehaviour
     bool isRunning = false;
 
     bool isLanding = false;
-
-    // bool isShooting = false;
 
     bool shootRotation = false;
 
@@ -104,21 +104,14 @@ public class ThirdPersonMovement : MonoBehaviour
             }
         }
 
+        // code to rotate when aiming
         // if (isAiming && direction.magnitude < 0.1f)
         // {
-        //     float targetAngle = faceAngle;
+        // float targetAngle = cam.eulerAngles.y + 180;
         //     float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
         //     transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
         // }  
-        // if (isShooting)
-        // {
-        //     Debug.Log("In shooting");
-        //     Debug.Log(faceDirection);
-        //     float shootSmoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, faceDirection.y, ref turnShootSmoothVelocity, turnSmoothTime);
-        //     transform.rotation = Quaternion.Euler(0f, shootSmoothedAngle, 0f);
 
-        // }
-        // isShooting = false;
 
         if (direction.magnitude >= 0.1f)
         {
@@ -189,14 +182,14 @@ public class ThirdPersonMovement : MonoBehaviour
         
         cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        transform.rotation = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
+        Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
 
-
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationDirection, 0.75f);
+        
         if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
         {
             
             faceAngle = Vector3.Angle(transform.forward, cameraAim.direction);
-            // faceAngle = Vector3.Angle(-transform.forward, (cameraHit.transform.position - shootOrigin.transform.position).normalized);
             
             if (Physics.Raycast(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, out hit, Mathf.Infinity))
             {

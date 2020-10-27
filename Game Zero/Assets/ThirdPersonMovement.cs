@@ -36,6 +36,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     Vector3 faceDirection;
 
+    Ray cameraAim;
+
     bool isGrounded;
     bool isAiming = false;
     bool isRunning = false;
@@ -43,6 +45,8 @@ public class ThirdPersonMovement : MonoBehaviour
     bool isLanding = false;
 
     // bool isShooting = false;
+
+    bool shootRotation = false;
 
     // Update is called once per frame
     void Update()
@@ -100,12 +104,12 @@ public class ThirdPersonMovement : MonoBehaviour
             }
         }
 
-        if (isAiming && direction.magnitude < 0.1f)
-        {
-            float targetAngle = faceAngle;
-            float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
-        }  
+        // if (isAiming && direction.magnitude < 0.1f)
+        // {
+        //     float targetAngle = faceAngle;
+        //     float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        //     transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+        // }  
         // if (isShooting)
         // {
         //     Debug.Log("In shooting");
@@ -176,14 +180,16 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+
     void Shoot()
     {
         RaycastHit hit;
 
         RaycastHit cameraHit;
         
-        Ray cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);
-        // isShooting = true;
+        cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        transform.rotation = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
 
 
         if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))

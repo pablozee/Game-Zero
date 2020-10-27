@@ -15,7 +15,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public Transform aimLookAt;
 
-
     public float speed = 6f;
     public float gravity = -9.81f;
     public float jumpHeight = 4f;
@@ -23,13 +22,23 @@ public class ThirdPersonMovement : MonoBehaviour
     //to smooth player turn speed
     public float turnSmoothTime = 0.1f;
 
+    public float shootRotateSpeed = 6.3f;
+
     public Animator animator;
 
     public GameObject shootOrigin;
 
     float turnSmoothVelocity;
 
+    float turnShootSmoothVelocity;
+
+    float faceAngle;
+
     Vector3 velocity;
+
+    Vector3 faceDirection;
+
+    Ray cameraAim;
 
     bool isGrounded;
     bool isAiming = false;
@@ -93,14 +102,22 @@ public class ThirdPersonMovement : MonoBehaviour
             }
         }
 
-        //Rotate when aiming
-        if (isAiming)
+        if (isAiming && direction.magnitude < 0.1f && (Mathf.Abs(cameraAim.direction.x) > 0f || Mathf.Abs(cameraAim.direction.z) > 0f))
         {
-            float targetAngle = cam.transform.eulerAngles.y + 180;          
-            float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
-
+            Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
+            float targetRotation = rotationDirection.eulerAngles.y;
+            float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
         }
+
+        // code to rotate when aiming
+        // if (isAiming && direction.magnitude < 0.1f)
+        // {
+        // float targetAngle = cam.eulerAngles.y + 180;
+        //     float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        //     transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+        // }  
+
 
         if (direction.magnitude >= 0.1f)
         {
@@ -162,25 +179,34 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+
     void Shoot()
     {
         RaycastHit hit;
 
-        Vector3 newForward = transform.forward * -1;
-
-            if (Physics.Raycast(shootOrigin.transform.position, newForward, out hit, Mathf.Infinity))
+        RaycastHit cameraHit;
+        
+        cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);        
+        
+        if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
+        {
+            
+            faceAngle = Vector3.Angle(transform.forward, cameraAim.direction);
+            
+            if (Physics.Raycast(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, out hit, Mathf.Infinity))
             {
-                Debug.DrawRay(shootOrigin.transform.position, newForward, Color.red, 4f);
+                
+                Debug.DrawLine(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, Color.red, 4f);
                 if (hit.collider.tag == "Enemy")
                 {
                     Debug.Log("Hit Enemy");
                     hit.collider.GetComponent<EnemyStats>().TakeDamage(10);
-                }
+                } 
             } else 
             {
-                Debug.DrawRay(shootOrigin.transform.position, newForward, Color.red, 4f);
+                Debug.DrawLine(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, Color.red, 4f);
                 Debug.Log("Ray didn't hit");
             }
+        }
     }
-
 }

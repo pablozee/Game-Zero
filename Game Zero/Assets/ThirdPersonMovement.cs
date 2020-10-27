@@ -46,8 +46,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     bool isLanding = false;
 
-    bool shootRotation = false;
-
     // Update is called once per frame
     void Update()
     {
@@ -102,6 +100,14 @@ public class ThirdPersonMovement : MonoBehaviour
             {
                 animator.SetInteger("isIdle", 1);
             }
+        }
+
+        if (isAiming && direction.magnitude < 0.1f && (Mathf.Abs(cameraAim.direction.x) > 0f || Mathf.Abs(cameraAim.direction.z) > 0f))
+        {
+            Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
+            float targetRotation = rotationDirection.eulerAngles.y;
+            float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
         }
 
         // code to rotate when aiming
@@ -180,11 +186,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         RaycastHit cameraHit;
         
-        cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotationDirection, 1f);
+        cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);        
         
         if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
         {

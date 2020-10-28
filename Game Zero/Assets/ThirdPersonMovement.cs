@@ -13,8 +13,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public Transform landingCheck;
 
-    public Transform aimLookAt;
-
     public float speed = 6f;
     public float gravity = -9.81f;
     public float jumpHeight = 4f;
@@ -27,6 +25,8 @@ public class ThirdPersonMovement : MonoBehaviour
     public Animator animator;
 
     public GameObject shootOrigin;
+
+    public AimScript aimScript;
 
     float turnSmoothVelocity;
 
@@ -104,10 +104,11 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (isAiming && direction.magnitude < 0.1f && (Mathf.Abs(cameraAim.direction.x) > 0f || Mathf.Abs(cameraAim.direction.z) > 0f))
         {
-            Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (-cameraAim.direction.x, 0f, -cameraAim.direction.z), Vector3.up);
-            float targetRotation = rotationDirection.eulerAngles.y;
-            float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
+            aimScript.ResetYRotation();
+            // Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (cameraAim.direction.x, 0f, cameraAim.direction.z), Vector3.up);
+            // float targetRotation = rotationDirection.eulerAngles.y;
+            // float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
+            // transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
         }
 
         // code to rotate when aiming

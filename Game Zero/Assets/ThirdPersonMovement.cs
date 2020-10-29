@@ -16,6 +16,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public GameObject bullet;
 
+    public GameObject aimLine;
+
     public Transform reticleTarget;
 
     public float speed = 6f;
@@ -97,7 +99,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
          if (Input.GetMouseButtonDown(0) && isAiming) 
         {
-            animator.SetTrigger("shoot");
+            // animator.SetTrigger("shoot");
         }
 
         if (isGrounded && velocity.y < 0f && direction.magnitude < 0.1f)
@@ -128,6 +130,21 @@ public class ThirdPersonMovement : MonoBehaviour
         //     transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
         // }  
 
+        if (isAiming)
+        {
+            aimLine.SetActive(true);
+        } else 
+        {
+            aimLine.SetActive(false);
+        }
+
+        if (isAiming)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Shoot();     
+            }
+        }
 
         if (direction.magnitude >= 0.1f)
         {
@@ -185,22 +202,23 @@ public class ThirdPersonMovement : MonoBehaviour
 
     }
 
-    private void FixedUpdate() 
-    {
-        if (isAiming)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Shoot();     
-            }
-        }
-    }
+    // private void FixedUpdate() 
+    // {
+    //     if (isAiming)
+    //     {
+    //         if (Input.GetMouseButtonDown(0))
+    //         {
+    //             Shoot();     
+    //         }
+    //     }
+    // }
 
 
     void Shoot()
     {
         GameObject localBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        localBullet.GetComponent<Rigidbody>().AddForce(localBullet.transform.forward * 5000);
+        Vector3 direction = (reticleTarget.position - localBullet.transform.position).normalized;
+        localBullet.GetComponent<Rigidbody>().AddForce(direction * 5000);
 
         // RaycastHit hit;
 

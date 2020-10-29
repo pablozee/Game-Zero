@@ -12,6 +12,11 @@ public class ThirdPersonMovement : MonoBehaviour
     public LayerMask groundMask;
 
     public Transform landingCheck;
+    public Transform bulletSpawnPoint;
+
+    public GameObject bullet;
+
+    public Transform reticleTarget;
 
     public float speed = 6f;
     public float gravity = -9.81f;
@@ -46,6 +51,10 @@ public class ThirdPersonMovement : MonoBehaviour
 
     bool isLanding = false;
 
+    void Start() 
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -190,31 +199,34 @@ public class ThirdPersonMovement : MonoBehaviour
 
     void Shoot()
     {
-        RaycastHit hit;
+        GameObject localBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        localBullet.GetComponent<Rigidbody>().AddForce(localBullet.transform.forward * 5000);
 
-        RaycastHit cameraHit;
+        // RaycastHit hit;
+
+        // RaycastHit cameraHit;
         
-        cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);        
+        // cameraAim = Camera.main.ScreenPointToRay(Input.mousePosition);        
         
-        if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
-        {
+        // if (Physics.Raycast(cameraAim, out cameraHit, Mathf.Infinity))
+        // {
             
-            faceAngle = Vector3.Angle(transform.forward, cameraAim.direction);
+        //     faceAngle = Vector3.Angle(transform.forward, cameraAim.direction);
             
-            if (Physics.Raycast(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, out hit, Mathf.Infinity))
-            {
+        //     if (Physics.Raycast(shootOrigin.transform.position, shootOrigin.transform.forward, out hit, Mathf.Infinity))
+        //     {
                 
-                Debug.DrawLine(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, Color.red, 4f);
-                if (hit.collider.tag == "Enemy")
-                {
-                    Debug.Log("Hit Enemy");
-                    hit.collider.GetComponent<EnemyStats>().TakeDamage(10);
-                } 
-            } else 
-            {
-                Debug.DrawLine(shootOrigin.transform.position, (cameraHit.transform.position - shootOrigin.transform.position).normalized, Color.red, 4f);
-                Debug.Log("Ray didn't hit");
-            }
-        }
+        //         Debug.DrawLine(shootOrigin.transform.position, shootOrigin.transform.forward, Color.red, 4f);
+        //         if (hit.collider.tag == "Enemy")
+        //         {
+        //             Debug.Log("Hit Enemy");
+        //             hit.collider.GetComponent<EnemyStats>().TakeDamage(10);
+        //         } 
+        //     } else 
+        //     {
+        //         Debug.DrawLine(shootOrigin.transform.position, shootOrigin.transform.forward, Color.red, 4f);
+        //         Debug.Log("Ray didn't hit");
+        //     }
+        // }
     }
 }

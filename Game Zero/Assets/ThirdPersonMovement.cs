@@ -53,6 +53,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     bool isLanding = false;
 
+    Vector3 shootDirection;
+
     void Start() 
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -113,14 +115,14 @@ public class ThirdPersonMovement : MonoBehaviour
             }
         }
 
-        if (isAiming && direction.magnitude < 0.1f && (Mathf.Abs(cameraAim.direction.x) > 0f || Mathf.Abs(cameraAim.direction.z) > 0f))
-        {
-            aimScript.ResetYRotation();
-            // Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (cameraAim.direction.x, 0f, cameraAim.direction.z), Vector3.up);
-            // float targetRotation = rotationDirection.eulerAngles.y;
-            // float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
-            // transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
-        }
+        // if (isAiming && direction.magnitude < 0.1f && (Mathf.Abs(cameraAim.direction.x) > 0f || Mathf.Abs(cameraAim.direction.z) > 0f))
+        // {
+        //     aimScript.ResetYRotation();
+        //     // Quaternion rotationDirection = Quaternion.LookRotation(new Vector3 (cameraAim.direction.x, 0f, cameraAim.direction.z), Vector3.up);
+        //     // float targetRotation = rotationDirection.eulerAngles.y;
+        //     // float smoothedShootAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnShootSmoothVelocity, turnSmoothTime);
+        //     // transform.rotation = Quaternion.Euler(0f, smoothedShootAngle, 0f);
+        // }
 
         // code to rotate when aiming
         // if (isAiming && direction.magnitude < 0.1f)
@@ -140,6 +142,23 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (isAiming)
         {
+            // LineRenderer lineRenderer = aimLine.GetComponent<LineRenderer>();
+
+            // RaycastHit hit;
+
+            // if (Physics.Raycast(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, out hit))
+            // {
+            //     Debug.DrawLine(bulletSpawnPoint.position, shootDirection, Color.red, 4f);
+            //     Vector3 initialPosition = lineRenderer.GetPosition(1);
+            //     float lineDistance = Vector3.Distance(hit.point, bulletSpawnPoint.position);
+            //     // float distance = hit.point.z - bulletSpawnPoint.position.z;
+            //     lineRenderer.SetPosition(1, new Vector3 (initialPosition.x, initialPosition.y, hit.point.z));
+            //     Debug.Log("Hit " + hit.collider.name);
+            // } else 
+            // {
+            //     // Debug.DrawLine(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, Color.red, 4f);
+            // }
+
             if (Input.GetMouseButtonDown(0))
             {
                 Shoot();     
@@ -154,6 +173,7 @@ public class ThirdPersonMovement : MonoBehaviour
             {   
                 animator.SetInteger("isIdle", 0);
                 animator.SetInteger("isRunning", 1);
+                animator.SetBool("isAiming", false);
             }
 
             isAiming = false;
@@ -217,8 +237,20 @@ public class ThirdPersonMovement : MonoBehaviour
     void Shoot()
     {
         GameObject localBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        Vector3 direction = (reticleTarget.position - localBullet.transform.position).normalized;
-        localBullet.GetComponent<Rigidbody>().AddForce(direction * 5000);
+        shootDirection = (reticleTarget.position - localBullet.transform.position).normalized;
+        localBullet.GetComponent<Rigidbody>().AddForce(shootDirection * 5000);
+        // LineRenderer lineRenderer = aimLine.GetComponent<LineRenderer>();
+
+        // RaycastHit hit;
+        // if (Physics.Raycast(bulletSpawnPoint.position, direction, out hit))
+        // {
+        //     Vector3 initialPosition = lineRenderer.GetPosition(1);
+        //     float distance = hit.point.z - bulletSpawnPoint.position.z;
+        //     lineRenderer.SetPosition(1, new Vector3 (initialPosition.x, initialPosition.y, distance));
+        // } else 
+        // {
+
+        // }
 
         // RaycastHit hit;
 

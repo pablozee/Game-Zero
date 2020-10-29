@@ -41,8 +41,8 @@ public class ThirdPersonMovement : MonoBehaviour
     Ray cameraAim;
 
     bool isGrounded;
-    bool isAiming = false;
-    bool isRunning = false;
+    public bool isAiming = false;
+    public bool isRunning = false;
 
     bool isLanding = false;
 
@@ -130,6 +130,8 @@ public class ThirdPersonMovement : MonoBehaviour
                 animator.SetInteger("isRunning", 1);
             }
 
+            isAiming = false;
+
             //set run animation boolean to true
             //finds the angle we need to turn to face our new direction, add 180 to account for players initial rotation
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y + 180;
@@ -150,6 +152,11 @@ public class ThirdPersonMovement : MonoBehaviour
          if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+            if (isAiming == true)
+            {
+                isAiming = false;
+            }
 
             if (animator.GetInteger("isIdle") == 1)
             {

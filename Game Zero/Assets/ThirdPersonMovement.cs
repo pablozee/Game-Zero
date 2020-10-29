@@ -90,10 +90,10 @@ public class ThirdPersonMovement : MonoBehaviour
             {
                 animator.SetInteger("isIdle", 0);
             }
-             if (animator.GetInteger("isRunning") == 1)
-            {
+            // if (animator.GetInteger("isRunning") == 1)
+            // {
+            // }
                 animator.SetInteger("isRunning", 0);
-            }
             animator.SetBool("isAiming", !animator.GetBool("isAiming"));
         }
 

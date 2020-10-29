@@ -33,15 +33,15 @@ public class AimScript : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             if (lookRotation.eulerAngles.y > 90f && lookRotation.eulerAngles.y < 270f)
             {
-                chest.SetPositionAndRotation(chest.transform.position, lookRotation);
+                chest.SetPositionAndRotation(chest.transform.position, Quaternion.Euler(lookRotation.eulerAngles.x, lookRotation.eulerAngles.y + transform.eulerAngles.y, lookRotation.eulerAngles.z));
             }
-            if (lookRotation.eulerAngles.y > 0f && lookRotation.eulerAngles.y <=90)
+            if (lookRotation.eulerAngles.y > 0f && lookRotation.eulerAngles.y <= 90)
             {
-                chest.SetPositionAndRotation(chest.transform.position, Quaternion.Euler(lookRotation.eulerAngles.x, 90f, lookRotation.eulerAngles.z));
+                chest.SetPositionAndRotation(chest.transform.position, Quaternion.Euler(lookRotation.eulerAngles.x, 90f + transform.eulerAngles.y, lookRotation.eulerAngles.z));
             }
             if (lookRotation.eulerAngles.y >= 270f && lookRotation.eulerAngles.y < 360f)
             {
-                chest.SetPositionAndRotation(chest.transform.position, Quaternion.Euler(lookRotation.eulerAngles.x, 270f, lookRotation.eulerAngles.z));
+                chest.SetPositionAndRotation(chest.transform.position, Quaternion.Euler(lookRotation.eulerAngles.x, 270f + transform.eulerAngles.y, lookRotation.eulerAngles.z));
             }
 
         }

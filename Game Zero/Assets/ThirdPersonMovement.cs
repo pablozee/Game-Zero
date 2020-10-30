@@ -87,7 +87,10 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && isRunning == false)
         {
-            isAiming = !isAiming;
+            if (isAiming == false)
+            {
+                isAiming = true;
+            }
             if (animator.GetInteger("isIdle") == 1)
             {
                 animator.SetInteger("isIdle", 0);
@@ -95,7 +98,7 @@ public class ThirdPersonMovement : MonoBehaviour
             // if (animator.GetInteger("isRunning") == 1)
             // {
             // }
-                animator.SetInteger("isRunning", 0);
+            animator.SetInteger("isRunning", 0);
             animator.SetBool("isAiming", !animator.GetBool("isAiming"));
         }
 

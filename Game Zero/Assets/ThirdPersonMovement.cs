@@ -142,22 +142,23 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (isAiming)
         {
-            // LineRenderer lineRenderer = aimLine.GetComponent<LineRenderer>();
+            LineRenderer lineRenderer = aimLine.GetComponent<LineRenderer>();
 
-            // RaycastHit hit;
+            RaycastHit hit;
 
             // if (Physics.Raycast(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, out hit))
-            // {
-            //     Debug.DrawLine(bulletSpawnPoint.position, shootDirection, Color.red, 4f);
-            //     Vector3 initialPosition = lineRenderer.GetPosition(1);
-            //     float lineDistance = Vector3.Distance(hit.point, bulletSpawnPoint.position);
-            //     // float distance = hit.point.z - bulletSpawnPoint.position.z;
-            //     lineRenderer.SetPosition(1, new Vector3 (initialPosition.x, initialPosition.y, hit.point.z));
-            //     Debug.Log("Hit " + hit.collider.name);
-            // } else 
-            // {
-            //     // Debug.DrawLine(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, Color.red, 4f);
-            // }
+            if (Physics.Raycast(aimLine.transform.position, aimLine.transform.rotation * Vector3.forward, out hit))
+            {
+                Debug.DrawLine(bulletSpawnPoint.position, shootDirection, Color.red, 4f);
+                Vector3 initialPosition = lineRenderer.GetPosition(1);
+                float lineDistance = Vector3.Distance(hit.point, bulletSpawnPoint.position);
+                // float distance = hit.point.z - bulletSpawnPoint.position.z;
+                lineRenderer.SetPosition(1, new Vector3 (initialPosition.x, initialPosition.y, hit.distance));
+                // Debug.Log("Hit " + hit.collider.name);
+            } else 
+            {
+                // Debug.DrawLine(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, Color.red, 4f);
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -236,9 +237,28 @@ public class ThirdPersonMovement : MonoBehaviour
 
     void Shoot()
     {
-        GameObject localBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        shootDirection = (reticleTarget.position - localBullet.transform.position).normalized;
-        localBullet.GetComponent<Rigidbody>().AddForce(shootDirection * 5000);
+        RaycastHit shootHit;
+        if (Physics.Raycast(aimLine.transform.position, aimLine.transform.rotation * Vector3.forward, out shootHit))
+        {
+            // Debug.DrawLine(bulletSpawnPoint.position, shootDirection, Color.red, 4f);
+            // Vector3 initialPosition = lineRenderer.GetPosition(1);
+            // float lineDistance = Vector3.Distance(hit.point, bulletSpawnPoint.position);
+            // // float distance = hit.point.z - bulletSpawnPoint.position.z;
+            // lineRenderer.SetPosition(1, new Vector3 (initialPosition.x, initialPosition.y, hit.distance));
+            // Debug.Log("Hit " + hit.collider.name);
+            if (shootHit.collider.tag == "Enemy")
+            {
+                Debug.Log("Hit Enemy");
+                shootHit.collider.GetComponent<EnemyStats>().TakeDamage(10);
+            } 
+        } else 
+        {
+            // Debug.DrawLine(bulletSpawnPoint.position, shootOrigin.transform.rotation * Vector3.forward, Color.red, 4f);
+        }
+
+        // GameObject localBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        // shootDirection = (reticleTarget.position - localBullet.transform.position).normalized;
+        // localBullet.GetComponent<Rigidbody>().AddForce(shootDirection * 5000);
         // LineRenderer lineRenderer = aimLine.GetComponent<LineRenderer>();
 
         // RaycastHit hit;

@@ -64,7 +64,8 @@ public class EnemyController : MonoBehaviour
         if (!follow && !shoot)
         {
             navMeshAgent.SetDestination(targetObject.transform.position);
-            animator.SetBool("run", true);
+            idle = false;
+            follow = true;
         }
 
         animator.SetBool("idle", idle);      

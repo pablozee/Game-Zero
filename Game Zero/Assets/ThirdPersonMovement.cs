@@ -46,6 +46,11 @@ public class ThirdPersonMovement : MonoBehaviour
 
     bool isLanding = false;
 
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
     // Update is called once per frame
     void Update()
     {
